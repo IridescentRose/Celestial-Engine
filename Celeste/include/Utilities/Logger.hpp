@@ -6,25 +6,9 @@
 #include <fmt/color.h>
 #include "../cpch.hpp"
 
-/**
- * Macros to use the core logger.
- */
-#define CS_CORE_TRACE(msg, ...)  Stardust::Utilities::Logger::GetCoreLogger()->trace(msg, __VA_ARGS__)
-#define CS_CORE_DEBUG(msg, ...)  Stardust::Utilities::Logger::GetCoreLogger()->debug(msg, __VA_ARGS__)
-#define CS_CORE_INFO(msg, ...)   Stardust::Utilities::Logger::GetCoreLogger()->info(msg, __VA_ARGS__)
-#define CS_CORE_WARN(msg, ...)   Stardust::Utilities::Logger::GetCoreLogger()->warn(msg, __VA_ARGS__)
-#define CS_CORE_ERROR(msg, ...)  Stardust::Utilities::Logger::GetCoreLogger()->error(msg, __VA_ARGS__)
-
-/**
- * Macros to use the application logger.
- */
-#define CS_APP_TRACE(msg, ...)   Stardust::Utilities::Logger::GetAppLogger()->trace(msg, __VA_ARGS__)
-#define CS_APP_DEBUG(msg, ...)   Stardust::Utilities::Logger::GetAppLogger()->debug(msg, __VA_ARGS__)
-#define CS_APP_INFO(msg, ...)    Stardust::Utilities::Logger::GetAppLogger()->info(msg, __VA_ARGS__)
-#define CS_APP_WARN(msg, ...)    Stardust::Utilities::Logger::GetAppLogger()->warn(msg, __VA_ARGS__)
-#define CS_APP_ERROR(msg, ...)   Stardust::Utilities::Logger::GetAppLogger()->error(msg, __VA_ARGS__)
-
-#include "Assertion.hpp"
+#ifndef SINGLE_THREADED
+#include <mutex>
+#endif
 
 namespace Celeste::Utilities {
 
@@ -91,6 +75,11 @@ namespace Celeste::Utilities {
          */
         template <typename ...Args>
         auto log(const std::string &msg, const LogLevel &lvl, Args &&... args) -> void {
+
+            #ifndef SINGLE_THREADED
+            std::lock_guard guard(writeLock);
+            #endif
+
             if (lvl >= m_CutoffLevel) {
                 auto formatStr = ("[" + std::string(m_LogName) + "]") + "[" + logLevelToString(lvl) + "]: ";
 
@@ -109,7 +98,7 @@ namespace Celeste::Utilities {
          * @param lvl - Level to cutoff past.
          */
         inline auto setCutoff(const LogLevel &lvl) const -> void {
-            SD_ASSERT(lvl >= LogLevel::Trace && lvl <= LogLevel::Error, "LogLevel is invalid!");
+            //CS_CORE_ASSERT(lvl >= LogLevel::Trace && lvl <= LogLevel::Error, "LogLevel is invalid!")
             m_CutoffLevel = lvl;
         }
 
@@ -141,6 +130,10 @@ namespace Celeste::Utilities {
             log(msg, LogLevel::Error, std::forward<Args>(args)...);
         }
 
+        inline auto setUseColor(const bool& use_col) {
+            m_UseColor = use_col;
+        }
+
     private:
         mutable LogLevel m_CutoffLevel;
         FILE *m_FileOut;
@@ -150,12 +143,16 @@ namespace Celeste::Utilities {
         static RefPtr<Logger> s_Core;
         static RefPtr<Logger> s_Application;
 
+        #ifndef SINGLE_THREADED
+        std::mutex writeLock;
+        #endif
+
         /**
      * Converts LogLevel to const char*
      * @param level - level
      * @return - Return a string of the name
      */
-        inline const char *logLevelToString(const LogLevel &level) {
+        static inline auto logLevelToString(const LogLevel &level) -> const char* {
             switch (level) {
                 case LogLevel::Trace:
                     return "TRACE";
@@ -181,7 +178,7 @@ namespace Celeste::Utilities {
          * @param lvl - LogLevel
          * @return - A format color
          */
-        constexpr auto getColorLevel(LogLevel lvl) {
+        static constexpr auto getColorLevel(LogLevel lvl) -> fmt::color {
             switch (lvl) {
                 case LogLevel::Trace:
                     return fmt::color::light_gray;
@@ -200,5 +197,24 @@ namespace Celeste::Utilities {
         }
 
     };
-
 }
+
+/**
+ * Macros to use the core logger.
+ */
+#define CS_CORE_TRACE(...) ::Celeste::Utilities::Logger::GetCoreLogger()->trace(__VA_ARGS__)
+#define CS_CORE_DEBUG(...) ::Celeste::Utilities::Logger::GetCoreLogger()->debug(__VA_ARGS__)
+#define CS_CORE_INFO(...) ::Celeste::Utilities::Logger::GetCoreLogger()->info(__VA_ARGS__)
+#define CS_CORE_WARN(...) ::Celeste::Utilities::Logger::GetCoreLogger()->warn(__VA_ARGS__)
+#define CS_CORE_ERROR(...) ::Celeste::Utilities::Logger::GetCoreLogger()->error(__VA_ARGS__)
+
+/**
+ * Macros to use the application logger.
+ */
+#define CS_APP_TRACE(...) ::Celeste::Utilities::Logger::GetAppLogger()->trace(__VA_ARGS__)
+#define CS_APP_DEBUG(...) ::Celeste::Utilities::Logger::GetAppLogger()->debug(__VA_ARGS__)
+#define CS_APP_INFO(...) ::Celeste::Utilities::Logger::GetAppLogger()->info(__VA_ARGS__)
+#define CS_APP_WARN(...) ::Celeste::Utilities::Logger::GetAppLogger()->warn(__VA_ARGS__)
+#define CS_APP_ERROR(...) Celeste::Utilities::Logger::GetAppLogger()->error(__VA_ARGS__)
+
+#include "Assertion.hpp"

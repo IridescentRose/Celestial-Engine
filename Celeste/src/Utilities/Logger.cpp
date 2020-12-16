@@ -13,9 +13,9 @@ namespace Celeste::Utilities {
      */
     auto Utilities::Logger::init(bool color) -> void {
         s_Core = createRefPtr<Logger>("CORE", "core_log.log");
-        s_Core->m_UseColor = color;
+        s_Core->setUseColor(color);
         s_Application = createRefPtr<Logger>("APP", "app_log.log");
-        s_Application->m_UseColor = color;
+        s_Core->setUseColor(color);
     }
 
     /**
@@ -26,7 +26,6 @@ namespace Celeste::Utilities {
     Logger::Logger(const char *name, const char *path)
             : m_FileOut(nullptr), m_CutoffLevel(LogLevel::Trace),
               m_LogName(name), m_UseColor(false) {
-
         fopen_s(&m_FileOut, path, "w");
     }
 
