@@ -3,4 +3,5 @@ project(Celeste)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(Celeste/ Celeste/lib)
+#add_subdirectory(Celeste/ Celeste/lib)
+add_subdirectory(Test/ Test/bin)

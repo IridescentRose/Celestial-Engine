@@ -3,8 +3,7 @@
  */
 #pragma once
 
-#include "Logger.hpp"
-#include "../Platform/Platform.h"
+#include <cpch.hpp>
 #include <Windows.h>
 
 inline auto CS_DEBUG_BREAK() {
@@ -15,5 +14,5 @@ inline auto CS_DEBUG_BREAK() {
     }
 }
 
-#define CS_ASSERT(check, msg, ...) { if(!(check)) { CS_APP_ERROR(msg, __VA_ARGS__); CS_DEBUG_BREAK(); } }
-#define CS_CORE_ASSERT(check, msg, ...) {if(!(check)) { CS_CORE_ERROR(msg, __VA_ARGS__); CS_DEBUG_BREAK(); }}
+#define CS_ASSERT(check, ...) if(!(check)) { CS_APP_ERROR(__VA_ARGS__); CS_DEBUG_BREAK(); }
+#define CS_CORE_ASSERT(check, ...) if(!(check)) { CS_CORE_ERROR(__VA_ARGS__); CS_DEBUG_BREAK(); }

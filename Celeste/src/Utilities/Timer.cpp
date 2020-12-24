@@ -90,4 +90,11 @@ namespace Celeste::Utilities {
     auto Timer::elapsed() const -> double {
         return total;
     }
+
+    /**
+     * Resets the time
+     */
+    auto Timer::cleanup() -> void {
+        s_Time->reset();
+    }
 }

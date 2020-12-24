@@ -2,13 +2,14 @@
  * A simple timer
  */
 #pragma once
+#include <cpch.hpp>
 
 namespace Celeste::Utilities {
 
     /**
      * A flexible timer object.
      */
-    class Timer: public NonCopyable{
+    class Timer final: public NonCopyable{
     public:
 
         /**
@@ -44,6 +45,11 @@ namespace Celeste::Utilities {
          * @return - Application Timer RefPtr
          */
         static RefPtr<Timer>& GetAppTimer() {return s_Time;}
+
+        /**
+         * Cleans up the application timer.
+         */
+        static auto cleanup() -> void;
 
         /**
          * Gets the deltaTime

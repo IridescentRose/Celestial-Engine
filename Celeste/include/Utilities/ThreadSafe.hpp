@@ -14,7 +14,7 @@ template <typename T>
  * ThreadSafe wraps all parts of a class or struct with a mutex and lock_guard.
  * @tparam T - Class or Struct
  */
-class ThreadSafe {
+class ThreadSafe final {
     T data;
 #ifndef SINGLE_THREADED
     std::mutex mut;

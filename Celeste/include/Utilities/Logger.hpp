@@ -28,7 +28,7 @@ namespace Celeste::Utilities {
      * A Logger class which defines singleton-like objects.
      * It can still be instantiated for your own use, but recommended that you use the Core and App loggers provided.
      */
-    class Logger : public Singleton {
+    class Logger final : public Singleton {
     public:
 
         /**
@@ -98,7 +98,6 @@ namespace Celeste::Utilities {
          * @param lvl - Level to cutoff past.
          */
         inline auto setCutoff(const LogLevel &lvl) const -> void {
-            //CS_CORE_ASSERT(lvl >= LogLevel::Trace && lvl <= LogLevel::Error, "LogLevel is invalid!")
             m_CutoffLevel = lvl;
         }
 
@@ -202,19 +201,19 @@ namespace Celeste::Utilities {
 /**
  * Macros to use the core logger.
  */
-#define CS_CORE_TRACE(...) ::Celeste::Utilities::Logger::GetCoreLogger()->trace(__VA_ARGS__)
-#define CS_CORE_DEBUG(...) ::Celeste::Utilities::Logger::GetCoreLogger()->debug(__VA_ARGS__)
-#define CS_CORE_INFO(...) ::Celeste::Utilities::Logger::GetCoreLogger()->info(__VA_ARGS__)
-#define CS_CORE_WARN(...) ::Celeste::Utilities::Logger::GetCoreLogger()->warn(__VA_ARGS__)
-#define CS_CORE_ERROR(...) ::Celeste::Utilities::Logger::GetCoreLogger()->error(__VA_ARGS__)
+#define CS_CORE_TRACE(...) Celeste::Utilities::Logger::GetCoreLogger()->trace(__VA_ARGS__)
+#define CS_CORE_DEBUG(...) Celeste::Utilities::Logger::GetCoreLogger()->debug(__VA_ARGS__)
+#define CS_CORE_INFO(...) Celeste::Utilities::Logger::GetCoreLogger()->info(__VA_ARGS__)
+#define CS_CORE_WARN(...) Celeste::Utilities::Logger::GetCoreLogger()->warn(__VA_ARGS__)
+#define CS_CORE_ERROR(...) Celeste::Utilities::Logger::GetCoreLogger()->error(__VA_ARGS__)
 
 /**
  * Macros to use the application logger.
  */
-#define CS_APP_TRACE(...) ::Celeste::Utilities::Logger::GetAppLogger()->trace(__VA_ARGS__)
-#define CS_APP_DEBUG(...) ::Celeste::Utilities::Logger::GetAppLogger()->debug(__VA_ARGS__)
-#define CS_APP_INFO(...) ::Celeste::Utilities::Logger::GetAppLogger()->info(__VA_ARGS__)
-#define CS_APP_WARN(...) ::Celeste::Utilities::Logger::GetAppLogger()->warn(__VA_ARGS__)
+#define CS_APP_TRACE(...) Celeste::Utilities::Logger::GetAppLogger()->trace(__VA_ARGS__)
+#define CS_APP_DEBUG(...) Celeste::Utilities::Logger::GetAppLogger()->debug(__VA_ARGS__)
+#define CS_APP_INFO(...) Celeste::Utilities::Logger::GetAppLogger()->info(__VA_ARGS__)
+#define CS_APP_WARN(...) Celeste::Utilities::Logger::GetAppLogger()->warn(__VA_ARGS__)
 #define CS_APP_ERROR(...) Celeste::Utilities::Logger::GetAppLogger()->error(__VA_ARGS__)
 
 #include "Assertion.hpp"
