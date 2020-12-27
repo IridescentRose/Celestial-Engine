@@ -12,34 +12,34 @@ namespace Celeste::Network {
 	**/
     class Socket {
     public:
-        virtual ~Socket() = default;
+        virtual ~Socket();
 
         /**
          * Send a packet - (will be consumed)
         **/
-        [[maybe_unused]] virtual auto Send(ScopePtr<PacketOut>) -> void = 0;
+        [[maybe_unused]] [[maybe_unused]] auto Send(ScopePtr<PacketOut>) const -> void ;
 
         /**
          * Receives a PacketIn
         **/
-        [[maybe_unused]] virtual auto Recv() -> RefPtr<PacketIn> = 0;
+        [[maybe_unused]] [[maybe_unused]] auto Recv() const -> RefPtr<PacketIn>;
 
         /**
          * Sets the socket to be blocking / non-blocking
          *
          * @param blocking - Whether or not to block.
         **/
-        [[maybe_unused]] virtual auto SetBlock(bool blocking) -> bool = 0;
+        [[maybe_unused]] auto SetBlock(bool blocking) const -> bool;
 
         /**
          * Closes the socket.
         **/
-        [[maybe_unused]] virtual auto Close() -> void = 0;
+        [[maybe_unused]] auto Close() const -> void;
 
         /**
          * Returns whether or not the connection is alive?
         **/
-        [[maybe_unused]] virtual auto isAlive() -> bool = 0;
+        [[maybe_unused]] [[maybe_unused]] auto isAlive() const -> bool;
 
     protected:
         int m_socket = 0;
@@ -56,14 +56,7 @@ namespace Celeste::Network {
         /**
          * Connects to an IP at a port number.
         **/
-        [[maybe_unused]] auto Connect(unsigned short port, const char* ip) -> bool;
-
-        auto Close() -> void override;
-        auto SetBlock(bool blocking) -> bool override;
-        auto Send(ScopePtr<PacketOut> packetOut) -> void override;
-        auto isAlive() -> bool override;
-
-        auto Recv() -> RefPtr<PacketIn> override;
+        [[maybe_unused]] [[maybe_unused]] auto Connect(unsigned short port, const char* ip) -> bool;
     };
 
     /**
@@ -79,49 +72,6 @@ namespace Celeste::Network {
          * \param sock - accepted TCP connection
          */
         Connection(s32 sock);
-
-        /**
-         * Destruction.
-         *
-         */
-        ~Connection();
-
-        /**
-         * Turns on or off non-blocking mode.
-         *
-         * \param blocking - True if blocking, false if non-blocking. By default is blocking.
-         * \return - Whether or not operation was successful
-         */
-        auto SetBlock(bool blocking) -> bool override;
-
-        /**
-         * Checks if connection is valid.
-         *
-         * \return - Connection validity.
-         */
-        auto isAlive() -> bool override;
-
-        /**
-         * Send a packet out  - (will be consumed)
-         * @param packetOut - Packet to send
-         */
-        auto Send(ScopePtr<PacketOut> packetOut) -> void override;
-
-        /**
-         * Packet Receive.
-         * \return - Packet
-         */
-        auto Recv() -> RefPtr<PacketIn> override;
-
-        /**
-         * Closes our connection.
-         * Is also done at end of scope if not already done.
-         */
-        auto Close() -> void override;
-
-    private:
-        s32 m_socket;
-        bool connected;
     };
 
     /**
@@ -135,18 +85,18 @@ namespace Celeste::Network {
          *
          * @param port - Port to listen to.
         **/
-        ServerSocket(u16 port);
+        [[maybe_unused]] ServerSocket(u16 port);
         ~ServerSocket();
 
         /**
          * Listen for a connection
         **/
-        auto ListenState() -> RefPtr<Connection>;
+        [[maybe_unused]] auto ListenState() const -> RefPtr<Connection>;
 
         /**
          * Closes our socket.
          */
-        void Close();
+        void Close() const;
 
     private:
         s32 m_socket;

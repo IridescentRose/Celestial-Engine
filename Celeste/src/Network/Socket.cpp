@@ -16,7 +16,7 @@ namespace Celeste::Network{
         m_socket = 0;
     }
 
-    auto ClientSocket::Connect(unsigned short port, const char* ip) -> bool {
+    [[maybe_unused]] auto ClientSocket::Connect(unsigned short port, const char* ip) -> bool {
         CS_CORE_INFO("Opening Connection: [" + std::string(ip) + "]" + "@" + std::to_string(port));
 
         m_socket = static_cast<int>(socket(PF_INET, SOCK_STREAM, 0));
@@ -34,7 +34,7 @@ namespace Celeste::Network{
         return b;
     }
 
-    auto ClientSocket::Close() -> void {
+    auto Socket::Close() const -> void {
         CS_CORE_INFO("Closing Client Socket!");
         using namespace Platform;
 
@@ -72,28 +72,27 @@ namespace Celeste::Network{
         #endif
     }
 
-    auto ClientSocket::SetBlock(bool blocking) -> bool {
+    [[maybe_unused]] auto Socket::Send(ScopePtr<PacketOut> packetOut) const -> void {
+        size_t packetLength = packetOut->buffer->GetUsedSpace() + 1;
 
-        using namespace Platform;
+        auto byteBuffer = createScopePtr<ByteBuffer>(packetLength + 5); //512 KB
+        byteBuffer->WriteVarInt32(static_cast<uint32_t>(packetLength));
+        byteBuffer->WriteBEUInt8(packetOut->ID);
 
-        if constexpr (isPlatform(PlatformType::Windows)) {
-            return ms_SetBlock(m_socket, blocking);
-        } else {
-            return nix_SetBlock(m_socket, blocking);
+        for (int i = 0; i < packetOut->buffer->GetUsedSpace(); i++) {
+            uint8_t temp;
+            packetOut->buffer->ReadBEUInt8(temp);
+            byteBuffer->WriteBEUInt8(temp);
         }
-    }
 
-    auto ClientSocket::Send(ScopePtr<PacketOut> packetOut) -> void {
-
-
-        int res = send(m_socket, packetOut->buffer->m_Buffer, static_cast<int>(packetOut->buffer->GetUsedSpace()), 0);
+        int res = send(m_socket, byteBuffer->m_Buffer, static_cast<int>(byteBuffer->GetUsedSpace()), 0);
         if (res < 0) {
             CS_CORE_WARN("Failed to send a packet!");
             CS_CORE_WARN("Packet Size: " + std::to_string(packetOut->buffer->GetUsedSpace()));
         }
     }
 
-    auto ClientSocket::isAlive() -> bool {
+    [[maybe_unused]] auto Socket::isAlive() const -> bool {
         bool connected = false;
         char buffer[32] = { 0 };
         int res = recv(m_socket, buffer, sizeof(buffer), MSG_PEEK);
@@ -105,7 +104,7 @@ namespace Celeste::Network{
         return connected;
     }
 
-    auto ClientSocket::Recv() -> RefPtr<PacketIn> {
+    [[maybe_unused]] auto Socket::Recv() const -> RefPtr<PacketIn> {
         std::vector<byte> len;
         byte newByte;
         int res = recv(m_socket, &newByte, 1, MSG_PEEK);
@@ -183,5 +182,86 @@ namespace Celeste::Network{
         else {
             return nullptr;
         }
+    }
+
+    Connection::Connection(s32 sock) {
+        m_socket = sock;
+        SetBlock(false);
+    }
+
+    auto Socket::SetBlock(bool blocking) const -> bool {
+        using namespace Platform;
+
+        if constexpr (isPlatform(PlatformType::Windows)) {
+            return ms_SetBlock(m_socket, blocking);
+        } else {
+            return nix_SetBlock(m_socket, blocking);
+        }
+    }
+
+    Socket::~Socket() {
+        Close();
+    }
+
+    [[maybe_unused]] ServerSocket::ServerSocket(u16 port) {
+        m_socket = static_cast<int>(socket(AF_INET, SOCK_STREAM, 0));
+
+        if (m_socket == -1) {
+            throw std::runtime_error("Fatal: Could not open socket! Errno: " + std::to_string(errno));
+        }
+        m_PortNo = port;
+
+
+
+        CS_CORE_DEBUG("Socket Created!");
+
+        sockaddr_in sockaddr{};
+        sockaddr.sin_family = AF_INET;
+        sockaddr.sin_addr.s_addr = INADDR_ANY;
+        sockaddr.sin_port = htons(port);
+
+        if (bind(m_socket, (struct sockaddr*) & sockaddr, sizeof(sockaddr)) < 0) {
+            throw std::runtime_error("Fatal: Could not bind socket address! Port: " + std::to_string(port) + ". Errno: " + std::to_string(errno));
+        }
+
+        CS_CORE_DEBUG("Socket Bound!");
+
+    }
+
+    ServerSocket::~ServerSocket() {
+        Close();
+    }
+
+    void ServerSocket::Close() const {
+        CS_CORE_INFO("Closing Server Socket!");
+        using namespace Platform;
+
+        if constexpr (isPlatform(PlatformType::Windows)) {
+            closesocket(m_socket);
+        }
+    }
+
+    [[maybe_unused]] auto ServerSocket::ListenState() const -> RefPtr <Connection> {
+        sockaddr_in socketAddress{};
+        socketAddress.sin_family = AF_INET;
+        socketAddress.sin_addr.s_addr = INADDR_ANY;
+        socketAddress.sin_port = htons(m_PortNo);
+
+        CS_CORE_DEBUG("Listening on socket...");
+        if (listen(m_socket, 1) < 0) {
+            throw std::runtime_error("Fatal: Could not listen on socket. Errno: " + std::to_string(errno));
+        }
+
+        auto addressLen = sizeof(socketAddress);
+        auto conn = static_cast<int>(accept(m_socket, (struct sockaddr*) & socketAddress, (socklen_t*)&addressLen));
+        CS_CORE_DEBUG("Found potential connection...");
+
+        if (conn < 0) {
+            throw std::runtime_error("Fatal: Could not accept connection. Errno: " + std::to_string(errno));
+        }
+
+        CS_CORE_INFO("New Connection from " + std::string((inet_ntoa(socketAddress.sin_addr))) + " on port " + std::to_string(ntohs(socketAddress.sin_port)));
+
+        return createRefPtr<Connection>(conn);
     }
 }
