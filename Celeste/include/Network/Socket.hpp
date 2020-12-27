@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "cpch.hpp"
+//#include "cpch.hpp"
 #include "Packet.hpp"
 
 namespace Celeste::Network {
@@ -12,34 +12,34 @@ namespace Celeste::Network {
 	**/
     class Socket {
     public:
-        virtual ~Socket();
+        virtual ~Socket() = default;
 
         /**
          * Send a packet - (will be consumed)
         **/
-        virtual auto Send(ScopePtr<PacketOut>) -> void = 0;
+        [[maybe_unused]] virtual auto Send(ScopePtr<PacketOut>) -> void = 0;
 
         /**
          * Receives a PacketIn
         **/
-        virtual auto Recv() -> RefPtr<PacketIn> = 0;
+        [[maybe_unused]] virtual auto Recv() -> RefPtr<PacketIn> = 0;
 
         /**
          * Sets the socket to be blocking / non-blocking
          *
          * @param blocking - Whether or not to block.
         **/
-        virtual auto SetBlock(bool blocking) -> bool = 0;
+        [[maybe_unused]] virtual auto SetBlock(bool blocking) -> bool = 0;
 
         /**
          * Closes the socket.
         **/
-        virtual auto Close() -> void = 0;
+        [[maybe_unused]] virtual auto Close() -> void = 0;
 
         /**
          * Returns whether or not the connection is alive?
         **/
-        virtual auto isAlive() -> bool = 0;
+        [[maybe_unused]] virtual auto isAlive() -> bool = 0;
 
     protected:
         int m_socket = 0;
@@ -48,27 +48,22 @@ namespace Celeste::Network {
     /**
      * Socket for Client side connections
     **/
-    class ClientSocket : public Socket {
+    class [[maybe_unused]] ClientSocket : public Socket {
     public:
         ClientSocket();
-        virtual ~ClientSocket();
+        ~ClientSocket() override = default;
 
         /**
          * Connects to an IP at a port number.
         **/
-        auto Connect(unsigned short port, const char* ip) -> bool;
+        [[maybe_unused]] auto Connect(unsigned short port, const char* ip) -> bool;
 
-        auto Close() -> void;
-        auto SetBlock(bool blocking) -> bool;
-        auto Send(ScopePtr<PacketOut> packetOut) -> void;
-        auto isAlive() -> bool;
+        auto Close() -> void override;
+        auto SetBlock(bool blocking) -> bool override;
+        auto Send(ScopePtr<PacketOut> packetOut) -> void override;
+        auto isAlive() -> bool override;
 
-        auto Recv() -> RefPtr<PacketIn>;
-
-        /**
-         * Threshold for zlib compression.
-        **/
-        size_t threshold;
+        auto Recv() -> RefPtr<PacketIn> override;
     };
 
     /**
@@ -76,7 +71,7 @@ namespace Celeste::Network {
      * Used with a raw connection socket.
      * Provides us packet methods.
      */
-    class Connection {
+    class Connection : public Socket {
     public:
         /**
          * Constructs a new Connection.
@@ -97,32 +92,32 @@ namespace Celeste::Network {
          * \param blocking - True if blocking, false if non-blocking. By default is blocking.
          * \return - Whether or not operation was successful
          */
-        auto SetBlock(bool blocking) -> bool;
+        auto SetBlock(bool blocking) -> bool override;
 
         /**
          * Checks if connection is valid.
          *
          * \return - Connection validity.
          */
-        auto isAlive() -> bool;
+        auto isAlive() -> bool override;
 
         /**
          * Send a packet out  - (will be consumed)
          * @param packetOut - Packet to send
          */
-        auto Send(ScopePtr<PacketOut> packetOut) -> void;
+        auto Send(ScopePtr<PacketOut> packetOut) -> void override;
 
         /**
          * Packet Receive.
          * \return - Packet
          */
-        auto Recv() -> RefPtr<PacketIn>;
+        auto Recv() -> RefPtr<PacketIn> override;
 
         /**
          * Closes our connection.
          * Is also done at end of scope if not already done.
          */
-        auto Close() -> void;
+        auto Close() -> void override;
 
     private:
         s32 m_socket;
@@ -132,7 +127,7 @@ namespace Celeste::Network {
     /**
      * Creates a server socket for binding.
      */
-    class ServerSocket {
+    class [[maybe_unused]] ServerSocket {
     public:
 
         /**

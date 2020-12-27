@@ -4,7 +4,6 @@
 #pragma once
 
 #include <cpch.hpp>
-#include <Windows.h>
 
 inline auto CS_DEBUG_BREAK() {
     using namespace Celeste::Platform;

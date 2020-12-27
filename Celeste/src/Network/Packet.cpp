@@ -1,4 +1,5 @@
 #include <Network/Packet.hpp>
+#include <winsock2.h>
 
 #define NEEDBYTES(Num) if (!CanReadBytes(Num))  return false  // Check if at least Num bytes can be read from  the buffer, return false if not
 #define PUTBYTES(Num)  if (!CanWriteBytes(Num)) return false  // Check if at least Num bytes can be written to the buffer, return false if not

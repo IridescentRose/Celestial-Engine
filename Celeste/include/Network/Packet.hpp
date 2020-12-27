@@ -7,6 +7,7 @@
 namespace Celeste::Network {
 
     #define KiB * 1024
+    #define MAX_STRING_SIZE (512 KiB)
 
     /*
         Based off of https://github.com/cuberite/cuberite/blob/master/src/ByteBuffer.h
@@ -23,22 +24,22 @@ namespace Celeste::Network {
 #undef GetFreeSpace
 #endif
         /** Returns the number of bytes that can be successfully written to the ringbuffer */
-        size_t GetFreeSpace(void) const;
+        [[nodiscard]] size_t GetFreeSpace(void) const;
 
         /** Returns the number of bytes that are currently in the ringbuffer. Note GetReadableBytes() */
-        size_t GetUsedSpace(void) const;
+        [[nodiscard]] size_t GetUsedSpace(void) const;
 
         /** Returns the number of bytes that are currently available for reading (may be less than UsedSpace due to some data having been read already) */
-        size_t GetReadableSpace(void) const;
+        [[nodiscard]] size_t GetReadableSpace(void) const;
 
         /** Returns the current data start index. For debugging purposes. */
-        size_t GetDataStart(void) const { return m_DataStart; }
+        [[nodiscard]] size_t GetDataStart(void) const { return m_DataStart; }
 
         /** Returns true if the specified amount of bytes are available for reading */
-        bool CanReadBytes(size_t a_Count) const;
+        [[nodiscard]] bool CanReadBytes(size_t a_Count) const;
 
         /** Returns true if the specified amount of bytes are available for writing */
-        bool CanWriteBytes(size_t a_Count) const;
+        [[nodiscard]] bool CanWriteBytes(size_t a_Count) const;
 
         bool WriteBEInt8(int8_t   a_Value);
         bool WriteBEInt16(int16_t  a_Value);
@@ -90,16 +91,16 @@ namespace Celeste::Network {
         bool ReadToByteBuffer(ByteBuffer& a_Dst, size_t a_NumBytes);
 
         /** Removes the bytes that have been read from the ringbuffer */
-        void CommitRead(void);
+        void CommitRead();
 
         /** Restarts next reading operation at the start of the ringbuffer */
-        void ResetRead(void);
+        void ResetRead();
 
         /** Re-reads the data that has been read since the last commit to the current readpos. Used by ProtoProxy to duplicate communication */
         void ReadAgain(std::string& a_Out);
 
         /** Checks if the internal state is valid (read and write positions in the correct bounds) using ASSERTs */
-        void CheckValid(void) const;
+        void CheckValid() const;
 
         /** Gets the number of bytes that are needed to represent the given VarInt */
         static size_t GetVarIntSize(uint32_t a_Value);

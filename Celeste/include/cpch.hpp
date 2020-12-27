@@ -18,14 +18,14 @@
 #include <unordered_set>
 #include <chrono>
 #include <iomanip>
-
-#include "Platform/Platform.h"
+#include <thread>
 
 #include "Utilities/NonCopyable.hpp"
 #include "Utilities/NonMovable.hpp"
 #include "Utilities/Singleton.hpp"
 #include "Utilities/ThreadSafe.hpp"
 #include "Utilities/Types.hpp"
+#include "Platform/Platform.h"
 #include "Utilities/Timer.hpp"
 #include "Utilities/Logger.hpp"
 #include "Utilities/Profiler.hpp"

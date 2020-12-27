@@ -4,6 +4,18 @@
 
 #pragma once
 
+#include <Utilities/Types.hpp>
+
+#ifndef BUILD_PLAT
+#error No platform selected!
+#endif
+
+#define BUILD_WINDOWS 0
+#define BUILD_DARWIN 1
+#define BUILD_LINUX 2
+#define BUILD_PSP 3
+#define BUILD_VITA 4
+
 namespace Celeste::Platform{
     enum class PlatformType {
         Windows [[maybe_unused]],
@@ -19,11 +31,21 @@ namespace Celeste::Platform{
         Nintendo_Switch [[maybe_unused]]
     };
 
-    constexpr auto getPlatform() -> PlatformType {
-        return BUILD_PLATFORM;
-    }
+
+#if BUILD_PLAT == BUILD_WINDOWS
+    constexpr auto BUILD_PLATFORM = Celeste::Platform::PlatformType::Windows;
+#elif
+
+
+    #else
+#error Invalid Platform!
+#endif
 
     constexpr auto isPlatform(PlatformType pType) -> bool {
-        return getPlatform() == pType;
+        return BUILD_PLATFORM == pType;
+    }
+
+    inline auto delayForMS(u32 millis) -> void {
+        std::this_thread::sleep_for(std::chrono::milliseconds(millis));
     }
 }

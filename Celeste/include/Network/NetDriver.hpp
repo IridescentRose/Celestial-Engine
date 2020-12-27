@@ -2,20 +2,38 @@
  * Network driver for all platforms
  */
 #pragma once
-#include "cpch.hpp"
 
 namespace Celeste::Network {
 
+    /**
+     * Main driver
+     */
     class NetDriver : public Singleton {
     public:
 
+        /**
+         * Starts up your networking code
+         * @return - successful?
+         */
         static bool init();
+
+        /**
+         * Cleans up the network code
+         */
         static void cleanup();
 
-        inline auto isInit() -> bool {
+        /**
+         * Checks if the network driver is already set up
+         * @return - If the network driver has been set up
+         */
+        inline auto isInit() const -> bool {
             return isInitialized;
         }
 
+        /**
+         * Gets the instance of the net driver
+         * @return - Instance of this
+         */
         static NetDriver& Get() {
             static NetDriver instance;
             return instance;
