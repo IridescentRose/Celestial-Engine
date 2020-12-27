@@ -11,16 +11,14 @@
 #endif
 
 #define BUILD_WINDOWS 0
-#define BUILD_DARWIN 1
-#define BUILD_LINUX 2
-#define BUILD_PSP 3
-#define BUILD_VITA 4
+#define BUILD_POSIX 1
+#define BUILD_PSP 2
+#define BUILD_VITA 3
 
 namespace Celeste::Platform{
     enum class PlatformType {
         Windows [[maybe_unused]],
-        Darwin [[maybe_unused]],
-        Linux [[maybe_unused]],
+        Posix [[maybe_unused]],
         Playstation_Portable [[maybe_unused]],
         Playstation_Vita [[maybe_unused]],
         Playstation_2 [[maybe_unused]],
@@ -34,8 +32,8 @@ namespace Celeste::Platform{
 
 #if BUILD_PLAT == BUILD_WINDOWS
     constexpr auto BUILD_PLATFORM = Celeste::Platform::PlatformType::Windows;
-#elif BUILD_PLAT == BUILD_DARWIN
-    constexpr auto BUILD_PLATFORM = Celeste::Platform::PlatformType::Darwin;
+#elif BUILD_PLAT == BUILD_POSIX
+    constexpr auto BUILD_PLATFORM = Celeste::Platform::PlatformType::Posix;
     #else
 #error Invalid Platform!
 #endif

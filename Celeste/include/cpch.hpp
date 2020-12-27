@@ -30,7 +30,7 @@
 #include "Utilities/Logger.hpp"
 #include "Utilities/Profiler.hpp"
 
-#if BUILD_PLAT == BUILD_DARWIN || BUILD_PLAT == BUILD_LINUX
+#if BUILD_PLAT == BUILD_POSIX
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <sys/socket.h>

@@ -3,7 +3,6 @@
  */
 #pragma once
 
-//#include "cpch.hpp"
 #include "Packet.hpp"
 
 namespace Celeste::Network {

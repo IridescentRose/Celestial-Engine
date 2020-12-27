@@ -4,7 +4,7 @@
 #pragma once
 #include <cpch.hpp>
 
-#if BUILD_PLAT == BUILD_DARWIN || BUILD_PLAT == BUILD_LINUX
+#if BUILD_PLAT == BUILD_POSIX
 #include <signal.h>
 #endif
 
@@ -13,8 +13,10 @@ inline auto CS_DEBUG_BREAK() {
 
 #if BUILD_PLAT == BUILD_WINDOWS
     __debugbreak();
-#elif BUILD_PLAT == BUILD_DARWIN
+#elif BUILD_PLAT == BUILD_POSIX
     raise(SIGTRAP);
+#else
+#error No Debug Break!
 #endif
 }
 
