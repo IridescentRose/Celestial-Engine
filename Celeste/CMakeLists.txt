@@ -7,7 +7,7 @@ include_directories(include)
 include_directories(../dep/eventpp/src)
 
 add_subdirectory(../dep/fmt build/)
-add_definitions(-DBUILD_PLAT=BUILD_WINDOWS)
+add_definitions(-DBUILD_PLAT=BUILD_DARWIN)
 
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
 file(GLOB_RECURSE INC_FILES include/*.cpp)

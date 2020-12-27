@@ -1,5 +1,8 @@
 #include <Network/Packet.hpp>
+
+#if BUILD_PLAT == BUILD_WINDOWS
 #include <winsock2.h>
+#endif
 
 #define NEEDBYTES(Num) if (!CanReadBytes(Num))  return false  // Check if at least Num bytes can be read from  the buffer, return false if not
 #define PUTBYTES(Num)  if (!CanWriteBytes(Num)) return false  // Check if at least Num bytes can be written to the buffer, return false if not

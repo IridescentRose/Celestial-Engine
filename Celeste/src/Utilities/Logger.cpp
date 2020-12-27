@@ -26,7 +26,12 @@ namespace Celeste::Utilities {
     Logger::Logger(const char *name, const char *path)
             : m_FileOut(nullptr), m_CutoffLevel(LogLevel::Trace),
               m_LogName(name), m_UseColor(false) {
+
+#if BUILD_PLAT == BUILD_WINDOWS
         fopen_s(&m_FileOut, path, "w");
+#else
+        m_FileOut = fopen(path, "w");
+#endif
     }
 
     /**

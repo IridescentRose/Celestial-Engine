@@ -34,9 +34,8 @@ namespace Celeste::Platform{
 
 #if BUILD_PLAT == BUILD_WINDOWS
     constexpr auto BUILD_PLATFORM = Celeste::Platform::PlatformType::Windows;
-#elif
-
-
+#elif BUILD_PLAT == BUILD_DARWIN
+    constexpr auto BUILD_PLATFORM = Celeste::Platform::PlatformType::Darwin;
     #else
 #error Invalid Platform!
 #endif

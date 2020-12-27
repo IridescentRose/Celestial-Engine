@@ -3,12 +3,14 @@
  */
 #include <Network/Socket.hpp>
 
+#if BUILD_PLAT == BUILD_WINDOWS
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#endif
 
 namespace Celeste::Network{
 
@@ -38,9 +40,11 @@ namespace Celeste::Network{
         CS_CORE_INFO("Closing Client Socket!");
         using namespace Platform;
 
-        if constexpr (isPlatform(PlatformType::Windows)) {
+#if BUILD_PLAT == BUILD_WINDOWS
             closesocket(m_socket);
-        }
+#else
+      close(m_socket);
+#endif
     }
 
     auto nix_SetBlock([[maybe_unused]] int m_socket, [[maybe_unused]]  bool blocking) {
@@ -68,7 +72,7 @@ namespace Celeste::Network{
         }
         return true;
         #else
-        return false
+        return false;
         #endif
     }
 
@@ -236,9 +240,11 @@ namespace Celeste::Network{
         CS_CORE_INFO("Closing Server Socket!");
         using namespace Platform;
 
-        if constexpr (isPlatform(PlatformType::Windows)) {
+#if BUILD_PLAT == BUILD_WINDOWS
             closesocket(m_socket);
-        }
+#else
+            close(m_socket);
+#endif
     }
 
     [[maybe_unused]] auto ServerSocket::ListenState() const -> RefPtr <Connection> {

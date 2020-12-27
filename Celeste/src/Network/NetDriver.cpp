@@ -2,31 +2,28 @@
  * Network Driver
  */
 #include <Network/NetDriver.hpp>
+
+#if BUILD_PLAT == BUILD_WINDOWS
 #include <winsock2.h>
+#endif
 
 namespace Celeste::Network {
 
     bool NetDriver::init() {
-        using namespace Platform;
 
-        if constexpr (isPlatform(PlatformType::Windows)) {
+#if BUILD_PLAT == BUILD_WINDOWS
             WSAData data;
             int res = WSAStartup(MAKEWORD(2, 2), &data);
             if (res != 0) {
                 return false;
             }
-        } else {
-            return false;
-        }
-
+#endif
         return true;
     }
 
     void NetDriver::cleanup() {
-        using namespace Platform;
-
-        if constexpr (isPlatform(PlatformType::Windows)) {
+#if BUILD_PLAT == BUILD_WINDOWS
             WSACleanup();
-        }
+#endif
     }
 }
