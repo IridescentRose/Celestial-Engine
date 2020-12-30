@@ -58,7 +58,7 @@ namespace Celeste::Utilities {
         Utilities::Timer t;
         std::ofstream m_FsOut;
         std::string profName;
-        int ln;
+        int ln{};
         std::string sfile;
     };
 }

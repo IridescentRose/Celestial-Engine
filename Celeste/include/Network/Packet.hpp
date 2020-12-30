@@ -128,7 +128,7 @@ namespace Celeste::Network {
         void AdvanceReadPos(size_t a_Count);
     };
 
-    typedef char byte;
+    typedef u8 byte;
 
     /**
 	 * Packet Output structure.
