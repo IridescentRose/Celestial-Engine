@@ -1,11 +1,14 @@
 #include <Celeste.hpp>
 
-class GameApplication : public Celeste::Core::Application {
+using namespace Celeste;
+using namespace Celeste::Core;
+
+class GameApplication : public Application {
 public:
     GameApplication() :
-        Celeste::Core::Application("MyGame")
+        Application("MyGame")
     {
-        clip = Celeste::createScopePtr<Celeste::Audio::AudioClip>("./test.ogg");
+        clip = createScopePtr<Audio::AudioClip>("./test.ogg");
         clip->SetPosition(0, 0, 0);
         clip->Play(0);
     }
@@ -13,9 +16,10 @@ public:
     ~GameApplication() override = default;
 
 private:
-    Celeste::ScopePtr<Celeste::Audio::AudioClip> clip;
+    ScopePtr<Audio::AudioClip> clip;
 };
 
-Celeste::Core::Application* CreateNewCelesteApp() {
+Application* CreateNewCelesteApp() {
+    PlatformLayer::initializeWithSettings(ApplicationEngineConfig::defaultConfig);
     return new GameApplication();
 }

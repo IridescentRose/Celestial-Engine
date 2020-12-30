@@ -10,17 +10,13 @@ namespace Celeste::Core {
     ApplicationEngineConfig ApplicationEngineConfig::defaultConfig = {};
 
 
-    Application::Application(const char* name, const ApplicationEngineConfig& config) : m_Name(name) {
+    Application::Application(const char* name) : m_Name(name) {
         CS_CORE_ASSERT(!s_Instance, "Instance already exists!")
         s_Instance = this;
         m_Running = true;
-
-        //TODO: Platform Init
     }
 
-    Application::~Application() {
-        //TODO: Platform Shutdown
-    }
+    Application::~Application() = default;
 
     void Application::Close() {
         m_Running = false;

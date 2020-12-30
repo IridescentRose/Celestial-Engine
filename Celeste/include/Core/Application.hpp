@@ -10,16 +10,38 @@ namespace Celeste::Core {
     struct ApplicationEngineConfig {
         bool headless = false;
 
+        //Each individual submodule
+
         //Platform specifics
 
         static ApplicationEngineConfig defaultConfig;
     };
 
+    class PlatformLayer {
+    public:
+        inline static void initializeWithSettings(const ApplicationEngineConfig& app) {
+            auto inst = Get();
+            inst.config = app;
+
+            //TODO: Initialize Engine
+        }
+
+        inline static void terminateLayer() {
+            //TODO: Terminate Engine
+        }
+
+        inline static PlatformLayer& Get() {
+            static PlatformLayer ply;
+            return ply;
+        }
+    private:
+        ApplicationEngineConfig config;
+    };
 
     class Application {
     public:
         Application() = delete;
-        Application(const char* name = "Stardust Celeste Application", const ApplicationEngineConfig& config = ApplicationEngineConfig::defaultConfig);
+        Application(const char* name = "Stardust Celeste Application");
         virtual ~Application();
 
         static Application& Get() { return *s_Instance; }
