@@ -111,7 +111,7 @@ namespace Celeste::Network{
     [[maybe_unused]] auto Socket::Recv() const -> RefPtr<PacketIn> {
         std::vector<byte> len;
         byte newByte;
-        int res = recv(m_socket, &newByte, 1, MSG_PEEK);
+        int res = recv(m_socket, reinterpret_cast<char*>(&newByte), 1, MSG_PEEK);
 
         if (res > 0) {
             char data[5] = { 0 };
@@ -153,7 +153,7 @@ namespace Celeste::Network{
             }
 
             while (totalTaken < length) {
-                res = recv(m_socket, b, length, 0);
+                res = recv(m_socket, reinterpret_cast<char*>(b), length, 0);
                 if (res > 0) {
                     totalTaken += res;
                 }
