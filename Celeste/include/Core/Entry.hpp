@@ -37,7 +37,7 @@ void headlessCleanup() {
  * @param argv - Argument variables
  * @return - Return code
  */
-int main(int, char**) {
+[[maybe_unused]] int main(int, char**) {
 
     /**
      * Init the base platform guarantees (Logging, Timing, Events)

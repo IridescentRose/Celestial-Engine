@@ -10,7 +10,7 @@ namespace Celeste::Core {
     ApplicationEngineConfig ApplicationEngineConfig::defaultConfig = {};
 
 
-    Application::Application(const char* name) : m_Name(name) {
+    Application::Application() {
         CS_CORE_ASSERT(!s_Instance, "Instance already exists!")
         s_Instance = this;
         m_Running = true;
@@ -27,8 +27,24 @@ namespace Celeste::Core {
         while(m_Running) {
             m_LastFrameTime = static_cast<float>(timer.getDeltaTime());
 
-            //TODO: Update stuff
-            //TODO: Render stuff
+            if(!m_StateStack.empty()){
+                m_StateStack.back()->onUpdate(this, m_LastFrameTime);
+                m_StateStack.back()->onDraw(this, m_LastFrameTime);
+            }
         }
+    }
+
+    void Application::PushState(RefPtr <ApplicationState> state) {
+        m_StateStack.emplace_back(state);
+    }
+
+    void Application::PopState() {
+        m_StateStack.pop_back();
+    }
+
+    void Application::SetState(RefPtr <ApplicationState> state) {
+        m_StateStack.clear();
+        m_StateStack.emplace_back(state);
+        m_StateStack.shrink_to_fit();
     }
 }

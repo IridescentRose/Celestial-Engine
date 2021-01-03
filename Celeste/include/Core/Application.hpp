@@ -3,9 +3,13 @@
  */
 #pragma once
 
-int main(int argc, char** argv);
+#include "State.hpp"
+
+[[maybe_unused]] int main(int argc, char** argv);
 
 namespace Celeste::Core {
+
+    class ApplicationState;
 
     struct ApplicationEngineConfig {
         bool headless = false;
@@ -40,11 +44,14 @@ namespace Celeste::Core {
 
     class Application {
     public:
-        Application() = delete;
-        Application(const char* name = "Stardust Celeste Application");
+        Application();
         virtual ~Application();
 
         static Application& Get() { return *s_Instance; }
+
+        void SetState(RefPtr<ApplicationState> state);
+        void PushState(RefPtr<ApplicationState> state);
+        void PopState();
 
         void Close();
 
@@ -55,9 +62,10 @@ namespace Celeste::Core {
         auto Run() -> void;
 
         static Application* s_Instance;
+
         friend int ::main(int argc, char** argv);
-        const char* m_Name;
         bool m_Running = true;
         float m_LastFrameTime = 0.0f;
+        std::vector<RefPtr<ApplicationState>> m_StateStack;
     };
 }

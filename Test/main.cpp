@@ -5,9 +5,8 @@ using namespace Celeste::Core;
 
 class GameApplication : public Application {
 public:
-    GameApplication() :
-        Application("MyGame")
-    {
+    GameApplication(){
+        //For more detailed applications, push back a state!
         clip = createScopePtr<Audio::AudioClip>("./test.ogg");
         clip->SetPosition(0, 0, 0);
         clip->Play(0);

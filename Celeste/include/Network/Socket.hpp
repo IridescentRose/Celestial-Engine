@@ -101,6 +101,4 @@ namespace Celeste::Network {
         s32 m_socket;
         u16 m_PortNo;
     };
-
-    //TODO: Implement Sockets
 }
