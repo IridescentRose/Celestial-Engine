@@ -31,8 +31,8 @@ namespace Celeste::Core {
         virtual void onUpdate(Application* app, double dt) = 0;
         virtual void onDraw(Application* app, double dt) = 0;
 
-        virtual void onStart() = default;
-        virtual void onCleanup() = default;
+        virtual void onStart(){};
+        virtual void onCleanup(){};
 
     };
 }

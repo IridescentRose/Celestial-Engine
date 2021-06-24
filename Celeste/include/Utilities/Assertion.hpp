@@ -16,7 +16,7 @@ inline auto CS_DEBUG_BREAK() {
 #elif BUILD_PLAT == BUILD_POSIX
     raise(SIGTRAP);
 #else
-#error No Debug Break!
+#warning No Debug Break!
 #endif
 }
 

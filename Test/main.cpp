@@ -8,7 +8,7 @@ public:
     GameApplication(){
         //For more detailed applications, push back a state!
         clip = createScopePtr<Audio::AudioClip>("./test.ogg");
-        clip->SetPosition(0, 0, 0);
+        clip->SetPosition(0.0f, 0.0f, 0);
         clip->Play(0);
     }
 

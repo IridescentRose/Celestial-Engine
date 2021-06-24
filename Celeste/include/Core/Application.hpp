@@ -54,10 +54,6 @@ namespace Celeste::Core {
         void PopState();
 
         void Close();
-
-        [[nodiscard]] inline auto getName() const -> const char* {
-            return m_Name;
-        }
     private:
         auto Run() -> void;
 

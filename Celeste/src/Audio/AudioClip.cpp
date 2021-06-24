@@ -143,10 +143,10 @@ namespace Celeste::Audio{
 
         if(stream) {
             auto music = reinterpret_cast<sf::Music *>(handle);
-            music->setPosition(x, y, z);
+            music->setPosition(px, py, pz);
         }else{
             auto music = reinterpret_cast<Sound*>(handle);
-            music->snd.setPosition(x, y, z);
+            music->snd.setPosition(px, py, pz);
         }
         #endif
     }

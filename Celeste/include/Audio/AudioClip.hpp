@@ -6,6 +6,9 @@
 
 namespace Celeste::Audio{
 
+    //TODO: Make PCAudio, PSPAudio, etc.
+    //TODO: Make createAudioClip() function to make a platform specific implementation
+    //TODO: Refer to all instances of an AudioClip as an IAudioClip
     class AudioClip : public IAudioClip {
     public:
         /**

@@ -16,12 +16,12 @@ namespace Celeste::Network {
         /**
          * Send a packet - (will be consumed)
         **/
-        [[maybe_unused]] [[maybe_unused]] auto Send(ScopePtr<PacketOut>) const -> void ;
+        [[maybe_unused]] auto Send(ScopePtr<PacketOut>) const -> void ;
 
         /**
          * Receives a PacketIn
         **/
-        [[maybe_unused]] [[maybe_unused]] auto Recv() const -> RefPtr<PacketIn>;
+        [[maybe_unused]] auto Recv() const -> RefPtr<PacketIn>;
 
         /**
          * Sets the socket to be blocking / non-blocking
@@ -38,7 +38,7 @@ namespace Celeste::Network {
         /**
          * Returns whether or not the connection is alive?
         **/
-        [[maybe_unused]] [[maybe_unused]] auto isAlive() const -> bool;
+        [[maybe_unused]] auto isAlive() const -> bool;
 
     protected:
         int m_socket = 0;
@@ -55,7 +55,7 @@ namespace Celeste::Network {
         /**
          * Connects to an IP at a port number.
         **/
-        [[maybe_unused]] [[maybe_unused]] auto Connect(unsigned short port, const char* ip) -> bool;
+        [[maybe_unused]] auto Connect(unsigned short port, const char* ip) -> bool;
     };
 
     /**
